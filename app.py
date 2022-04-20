@@ -1,7 +1,29 @@
 import requests
 import os
+if os.path.exists("env.py"):
+    import env
 
-word = "hello"
+
+# word = "hello"
+rapidapi_key = os.environ.get("WORDSAPI_KEY")
+
+
+def generate_word():
+	'''
+	Generates a word
+	'''
+	url = "https://random-words5.p.rapidapi.com/getMultipleRandom"
+	querystring = {
+		"count": "1",
+		"wordLength": "5"
+	}
+	headers = {
+		"X-RapidAPI-Host": "random-words5.p.rapidapi.com",
+		"X-RapidAPI-Key": rapidapi_key
+	}
+
+	response = requests.request("GET", url, headers=headers, params=querystring)
+	print(response.text)
 
 
 # def rounds(current_round):
@@ -63,7 +85,7 @@ word = "hello"
 # 		play_again()
 
 
-def validate_word():
+def validate_word(word):
 	'''
 	Takes the word generated and written by user to check that it is a valid word
 	'''
@@ -71,20 +93,19 @@ def validate_word():
 
 	headers = {
 		"X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
-		"X-RapidAPI-Key": "ec15220be3mshb409e3288051fd2p1c18fbjsn7819d389df2a"
+		"X-RapidAPI-Key": rapidapi_key
 	}
 
 	response = requests.request("GET", url, headers=headers)
 	data = response.text
-	data_array = []
+	print(data)
+	result = ""
 
 	x = 2
 	while x < 9:
-		data_array.insert(x-2, data[x])
+		result += data[x]
 		x += 1
 
-	result = ''.join(data_array)
-	
 	if result == 'success':
 		print("Value Entered is not a word")
 	else:
@@ -93,4 +114,5 @@ def validate_word():
 
 
 # ask_question(5)
-validate_word()
+# validate_word()
+generate_word()
